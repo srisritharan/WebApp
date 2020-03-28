@@ -12,7 +12,7 @@ node {
         git url: 'https://github.com/srisritharan/webapp.git'
     }
 	stage('Sonarqube') {
-	   def scannerHome = tool 'sonarqubescanner'
+	   def scannerHome = tool 'sonar'
 		withSonarQubeEnv('sonarqube') {
 		    sh "${scannerHome}/bin/sonar-scanner"
 	    }
