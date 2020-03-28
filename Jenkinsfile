@@ -12,13 +12,9 @@ node {
         git url: 'https://github.com/srisritharan/webapp.git'
     }
 	stage('Sonarqube') {
-	    environment {
-		scannerHome = tool 'sonarqubescanner'
-	    }
-	    steps {
+	   def scannerHome = tool 'sonarqubescanner'
 		withSonarQubeEnv('sonarqube') {
 		    sh "${scannerHome}/bin/sonar-scanner"
-		}
 	    }
 	}
     stage('Artifactory configuration') {
