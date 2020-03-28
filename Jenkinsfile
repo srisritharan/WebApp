@@ -11,7 +11,19 @@ node {
     stage('Clone sources') {
         git url: 'https://github.com/srisritharan/webapp.git'
     }
-
+	stage('Sonarqube') {
+	    environment {
+		scannerHome = tool 'sonarqube'
+	    }
+	    steps {
+		withSonarQubeEnv('sonarqube') {
+		    sh "${scannerHome}/bin/sonar-scanner"
+		}
+		timeout(time: 10, unit: 'MINUTES') {
+		    waitForQualityGate abortPipeline: true
+		}
+	    }
+	}
     stage('Artifactory configuration') {
         // Tool name from Jenkins configuration
         rtMaven.tool = "maven"
@@ -27,5 +39,6 @@ node {
     stage('Publish build info') {
         server.publishBuildInfo buildInfo
     }
+	
     }
 	 
