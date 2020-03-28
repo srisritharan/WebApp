@@ -19,19 +19,7 @@ node {
         rtMaven.deployer releaseRepo:'libs-release-local', snapshotRepo:'libs-snapshot-local', server: server
         rtMaven.resolver releaseRepo:'libs-release', snapshotRepo:'libs-snapshot', server: server
     }
-	stage('Sonarqube') {
-	    environment {
-		scannerHome = tool 'sonarqube'
-	    }
-	    steps {
-		withSonarQubeEnv('sonarqube') {
-		    sh "${scannerHome}/bin/sonar-scanner"
-		}
-		timeout(time: 10, unit: 'MINUTES') {
-		    waitForQualityGate abortPipeline: true
-		}
-	    }
-	}
+
     stage('Maven build') {
         buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install'
     }
