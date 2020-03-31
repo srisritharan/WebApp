@@ -33,6 +33,7 @@ node {
         buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install'
 	slackSend channel: 'project-dcs', message: 'started ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)', tokenCredentialId: 'slack'
 	jiraComment body: 'Build sucess', issueKey: 'DCS-1'
+	publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: '\\target\\surefire-reports\\', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: ''])
     }
 //
 
@@ -44,9 +45,7 @@ node {
         server.publishBuildInfo buildInfo
        }
 //
-    stage('UI Test') {
-	publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: '\\target\\surefire-reports\\', reportFiles: 'index.html', reportName: 'HTML Report', reportTitles: ''])
-         }
+    
 //
     stage('Deploy to Prod') {
 	      deploy adapters: [tomcat7(credentialsId: 'AWStomcat', path: '', url: 'http://3.14.10.76:8080/')], contextPath: '/ProdWebapp', war: '**/*.war'
