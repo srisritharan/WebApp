@@ -22,8 +22,9 @@ node {
     stage('SonarQube analysis') {
        //withSonarQubeEnv(credentialsId: 'sonar-test', installationName: 'sonarqube') { // You can override the credential to be used
        // sh 'mvn clean package sonar:sonar'
+       	 agent any
        	 withSonarQubeEnv('sonarqube') { // You can override the credential to be used
-       	 	sh 'mvn clean package sonar:sonar -Dsonar.host.url=http://35.224.54.238// -Dsonar.credentialsId=sonar-test -Dsonar.sources=. -Dsonar.tests=. -Dsonar.test.inclusions=**/test/java/servlet/createpage_junit.java -Dsonar.exclusions=**/test/java/servlet/createpage_junit.java'
+       	 	sh 'mvn clean package sonar:sonar -Dsonar.host.url=http://35.224.54.238// -Dsonar.login=a29b2b2da5f0a42dc37db12b04059fe18f575f12 -Dsonar.sources=. -Dsonar.tests=. -Dsonar.test.inclusions=**/test/java/servlet/createpage_junit.java -Dsonar.exclusions=**/test/java/servlet/createpage_junit.java'
               }
     	}
 //    
