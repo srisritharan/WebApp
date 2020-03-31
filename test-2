@@ -37,11 +37,11 @@ node {
 	    }
 	  }
 	}
-	stage("Quality Gate") {
+/*	stage("Quality Gate") {
 		timeout(time: 1, unit: 'HOURS') {
                 waitForQualityGate abortPipeline: true
     	}
-     }
+     } */
 //     
     stage('Maven build') {
         buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install'
