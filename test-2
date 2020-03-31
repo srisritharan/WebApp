@@ -22,6 +22,7 @@ node {
     stage('SonarQube analysis') {
     	withSonarQubeEnv(credentialsId: 'sonar-test', installationName: 'sonarqube') { // You can override the credential to be used
         sh 'mvn clean package sonar:sonar'
+    	}
     }
 //    
     stage('Maven build') {
@@ -37,6 +38,5 @@ node {
     stage('Publish build info') {
         server.publishBuildInfo buildInfo
        }
-	
+//	
     }
-}
