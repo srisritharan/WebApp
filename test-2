@@ -29,6 +29,14 @@ node {
               }
     	}
 //    
+     stage("Quality Gate") {
+       steps {
+		timeout(time: 1, unit: 'HOURS') {
+                waitForQualityGate abortPipeline: true
+             }
+    	}
+     }
+//     
     stage('Maven build') {
         buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install'
 	slackSend channel: 'project-dcs', message: 'started ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)', tokenCredentialId: 'slack'
