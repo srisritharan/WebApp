@@ -5,7 +5,15 @@ node {
     def rtMaven = Artifactory.newMavenBuild()
     def buildInfo 
     rtMaven.tool = "maven"
- 
+
+//   
+  stage('Artifactory configuration') {
+        // Tool name from Jenkins configuration
+        rtMaven.tool = "maven"
+        // Set Artifactory repositories for dependencies resolution and artifacts deployment.
+        rtMaven.deployer releaseRepo:'libs-release-local', snapshotRepo:'libs-snapshot-local', server: server
+        rtMaven.resolver releaseRepo:'libs-release', snapshotRepo:'libs-snapshot', server: server
+    }
 //    
     stage('Clone sources') {
         git url: 'https://github.com/srisritharan/WebApp.git'
@@ -28,20 +36,17 @@ node {
     }
 //
 
-  stage('Artifactory configuration') {
-        // Tool name from Jenkins configuration
-        rtMaven.tool = "maven"
-        // Set Artifactory repositories for dependencies resolution and artifacts deployment.
-        rtMaven.deployer releaseRepo:'libs-release-local', snapshotRepo:'libs-snapshot-local', server: server
-        rtMaven.resolver releaseRepo:'libs-release', snapshotRepo:'libs-snapshot', server: server
-    }
-//  
-    stage('Deploy') {
+    stage('Deploy to Test') {
 	      deploy adapters: [tomcat7(credentialsId: 'gcptomcat', path: '', url: 'http://104.198.41.127:8080/')], contextPath: '/QAWebapp', war: '**/*.war'
          }
 //
     stage('Publish build info') {
         server.publishBuildInfo buildInfo
        }
-//	
+//
+
+    stage('Deploy to Prod') {
+	      deploy adapters: [tomcat7(credentialsId: 'gcptomcat', path: '', url: 'http://3.14.10.76:8080/')], contextPath: '/ProdWebapp', war: '**/*.war'
+         }
+//
     }
