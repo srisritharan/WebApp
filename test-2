@@ -1,6 +1,5 @@
-// node {
-pipeline {
-    agent none
+node {
+
     // Get Artifactory server instance, defined in the Artifactory Plugin administration page.
     def server = Artifactory.server "artifactory"
     // Create an Artifactory Maven instance.
@@ -9,6 +8,7 @@ pipeline {
     rtMaven.tool = "maven"
 
 //   
+Stages{
 //  stage('Artifactory configuration') {
         // Tool name from Jenkins configuration
         rtMaven.tool = "maven"
@@ -72,3 +72,4 @@ pipeline {
          }
 //
     }
+}
