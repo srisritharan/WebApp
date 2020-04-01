@@ -68,4 +68,5 @@ node {
         buildInfo = rtMaven.run pom: 'Acceptancetest/pom.xml', goals: 'test'
 	publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: '\\Acceptancetest\\target\\surefire-reports', reportFiles: 'index.html', reportName: 'Sanity Test Report', reportTitles: ''])
     }
+    // test
  }
