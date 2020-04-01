@@ -1,0 +1,72 @@
+node {
+    def server
+    def buildInfo
+    def rtMaven
+    stage ('Artifactory configuration') {
+    	// Get Artifactory server instance, defined in the Artifactory Plugin administration page
+    		server = Artifactory.server "artifactory"
+		
+    	// Create an Artifactory Maven instance.
+        
+    		rtMaven = Artifactory.newMavenBuild()
+	
+    	// Tool name from Jenkins configuration
+    
+		rtMaven.tool = "maven"
+	
+    	// Set Artifactory repositories for dependencies resolution and artifacts deployment.
+    
+        	rtMaven.deployer releaseRepo:'libs-release-local', snapshotRepo:'libs-snapshot-local', server: server
+        	rtMaven.resolver releaseRepo:'libs-release', snapshotRepo:'libs-snapshot', server: server
+    }
+//    
+    stage('Clone source') {
+        git url: 'https://github.com/srisritharan/WebApp.git'
+    }
+//    
+    stage('SonarQube Analysis') {
+        withSonarQubeEnv(credentialsId: 'sonar-test', installationName: 'sonarqube') { // You can override the credential to be used
+       	sh 'mvn sonar:sonar -Dsonar.host.url=http://35.224.54.238// -Dsonar.sources=. -Dsonar.tests=. -Dsonar.test.inclusions=**/test/java/servlet/createpage_junit.java -Dsonar.exclusions=**/test/java/servlet/createpage_junit.java'
+        }
+	timeout(time: 1, unit: 'HOURS') { // Just in case something goes wrong, pipeline will be killed after a timeout
+	    def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
+	    if (qg.status != 'OK') {
+	      error "Pipeline aborted due to quality gate failure: ${qg.status}"
+	    }
+	}             
+    }
+//    
+    stage('Maven build') {
+        buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install',  buildInfo: buildInfo;
+//	slackSend channel: 'project-dcs', message: "started ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", tokenCredentialId: 'slack'
+//	slackSend channel: "Build started ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)"
+//	jiraComment body: 'Build sucess', issueKey: 'DCS-1'
+    }
+//
+
+    stage('Deploy to Test') {
+	      deploy adapters: [tomcat7(credentialsId: 'AWStomcat', path: '', url: 'http://18.217.15.48:8080/')], contextPath: '/QAWebapp', war: '**/*.war'
+         }
+//
+    stage('Store the Artifacts') {
+        server.publishBuildInfo buildInfo
+       }
+//
+    stage('UI Test') {
+        buildInfo = rtMaven.run pom: 'functionaltest/pom.xml', goals: 'test'
+	publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: '\\functionaltest\\target\\surefire-reports', reportFiles: 'index.html', reportName: 'UI Test Report', reportTitles: ''])
+    }
+//    
+    stage('Performance Test') {
+	blazeMeterTest credentialsId: 'BlazeMeter', testId: '7851103.taurus', workspaceId: '463545'
+    }
+//
+    stage('Deploy to Prod') {
+	      deploy adapters: [tomcat7(credentialsId: 'AWStomcat', path: '', url: 'http://3.14.10.76:8080/')], contextPath: '/ProdWebapp', war: '**/*.war'
+         }
+//
+    stage('Sanity Test') {
+        buildInfo = rtMaven.run pom: 'Acceptancetest/pom.xml', goals: 'test'
+	publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: '\\Acceptancetest\\target\\surefire-reports', reportFiles: 'index.html', reportName: 'Sanity Test Report', reportTitles: ''])
+    }
+ }
