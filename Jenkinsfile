@@ -1,14 +1,14 @@
 pipeline {
 agent any
-node {
+// node {
     // Get Artifactory server instance, defined in the Artifactory Plugin administration page.
     def server = Artifactory.server "artifactory"
     // Create an Artifactory Maven instance.
     def rtMaven = Artifactory.newMavenBuild()
     def buildInfo
-}    
+//}    
  rtMaven.tool = "maven"
-Stages {
+stages {
     stage('Clone sources') {
         git url: 'https://github.com/srisritharan/webapp.git'
     }
