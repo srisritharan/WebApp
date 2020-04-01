@@ -61,7 +61,8 @@ node {
 //
     stage('Deploy to Prod') {
 	      deploy adapters: [tomcat7(credentialsId: 'AWStomcat', path: '', url: 'http://3.14.10.76:8080/')], contextPath: '/ProdWebapp', war: '**/*.war'
-	      jiraSendDeploymentInfo environmentId: 'Prod', environmentName: 'production', environmentType: 'production', serviceIds: ['http://3.14.10.76:8080/ProdWebapp'], site: 'devopsbc.atlassian.net', state: 'successful'
+	     jiraSendDeploymentInfo environmentId: 'prod', environmentName: 'prod', environmentType: 'staging', serviceIds: ['http://3.14.10.76:8080/ProdWebapp'], site: 'devopsbc.atlassian.net', state: 'successful'
+	     jiraSendDeploymentInfo environmentId: 'Prod', environmentName: 'prod', environmentType: 'production', serviceIds: ['http://3.14.10.76:8080/ProdWebapp'], site: 'devopsbc.atlassian.net', state: 'successful'
          }
 //
     stage('Sanity Test') {
