@@ -1,6 +1,7 @@
 node {
     def server
     def buildInfo
+    def rtMaven
   // Tool name from Jenkins configuration
         
     stage ('Artifactory configuration') {
@@ -13,7 +14,7 @@ node {
 	
     	// Tool name from Jenkins configuration
     
-		def rtMaven.tool = "maven"
+		rtMaven.tool = "maven"
 	
     	// Set Artifactory repositories for dependencies resolution and artifacts deployment.
     
