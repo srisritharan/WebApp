@@ -33,22 +33,8 @@ node {
 	}             
     }
 //    
-/*	stage("Quality Gate"){
-	  timeout(time: 1, unit: 'HOURS') { // Just in case something goes wrong, pipeline will be killed after a timeout
-	    def qg = waitForQualityGate() // Reuse taskId previously collected by withSonarQubeEnv
-	    if (qg.status != 'OK') {
-	      error "Pipeline aborted due to quality gate failure: ${qg.status}"
-	    }
-	  }
-	}
-	stage("Quality Gate") {
-		timeout(time: 1, unit: 'HOURS') {
-                waitForQualityGate abortPipeline: true
-    	}
-     } */
-//     
     stage('Maven build') {
-        buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install'
+        buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install',  buildInfo: buildInfo;
 	slackSend channel: 'project-dcs', message: 'started ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)', tokenCredentialId: 'slack'
 	jiraComment body: 'Build sucess', issueKey: 'DCS-1'
     }
@@ -79,4 +65,5 @@ node {
         buildInfo = rtMaven.run pom: 'Acceptancetest/pom.xml', goals: 'test'
 	publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: '\\Acceptancetest\\target\\surefire-reports', reportFiles: 'index.html', reportName: 'Sanity Test Report', reportTitles: ''])
     }
+    
  }
