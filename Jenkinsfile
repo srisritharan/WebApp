@@ -24,11 +24,11 @@ Stages {
     stage('Maven build') {
         buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install'
     }
-/*    stage('Deploy') {
-	deploy adapters: [tomcat7(credentialsId: 'gcptomcat', path: '', url: 'http://104.198.41.127:8080/')], contextPath: '/projects', war: '**/*.war'
-    } 
-    stage('Publish build info') {
-        server.publishBuildInfo buildInfo
-    }*/
+//    stage('Deploy') {
+//	deploy adapters: [tomcat7(credentialsId: 'gcptomcat', path: '', url: 'http://104.198.41.127:8080/')], contextPath: '/projects', war: '**/*.war'
+//    } 
+//    stage('Publish build info') {
+//        server.publishBuildInfo buildInfo
+//    } 
 }
 }	 
