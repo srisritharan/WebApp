@@ -22,7 +22,7 @@ node {
         git url: 'https://github.com/srisritharan/WebApp.git'
     }
 //    
-    stage('SonarQube Analysis') {
+/*    stage('SonarQube Analysis') {
         withSonarQubeEnv(credentialsId: 'sonar-test', installationName: 'sonarqube') { // You can override the credential to be used
        	sh 'mvn sonar:sonar -Dsonar.host.url=http://35.224.54.238// -Dsonar.sources=. -Dsonar.tests=. -Dsonar.test.inclusions=**/test/java/servlet/createpage_junit.java -Dsonar.exclusions=**/test/java/servlet/createpage_junit.java'
         }
@@ -33,6 +33,7 @@ node {
 	    }
 	}             
     }
+    */
 //    
     stage('Maven build') {
         buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install', buildInfo: buildInfo
