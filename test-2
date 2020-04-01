@@ -37,8 +37,7 @@ node {
     stage('Maven build') {
         buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install', buildInfo: buildInfo
 	slackSend channel: 'project-dcs', message: "started ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", tokenCredentialId: 'slack'
-	jiraComment body: 'Build sucess', issueKey: 'DCS-1'
-	jiraSendBuildInfo branch: 'master', site: 'devopsbc.atlassian.net'
+	jiraSendBuildInfo
     }
 //
 
@@ -62,7 +61,7 @@ node {
 //
     stage('Deploy to Prod') {
 	      deploy adapters: [tomcat7(credentialsId: 'AWStomcat', path: '', url: 'http://3.14.10.76:8080/')], contextPath: '/ProdWebapp', war: '**/*.war'
-	      jiraSendDeploymentInfo environmentId: 'Prod', environmentName: 'Production', environmentType: 'Production', serviceIds: ['http://3.14.10.76:8080/ProdWebapp/'], site: 'devopsbc.atlassian.net', state: 'successful'
+	      jiraSendDeploymentInfo environmentId: 'Prod', environmentName: 'production', environmentType: 'production', serviceIds: ['http://3.14.10.76:8080/ProdWebapp'], site: 'devopsbc.atlassian.net', state: 'successful'
          }
 //
     stage('Sanity Test') {
