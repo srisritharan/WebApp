@@ -2,6 +2,9 @@ node {
     def server
     def buildInfo
     def rtMaven
+// Tool name from Jenkins configuration
+    rtMaven.tool = "maven"
+    
     stage ('Artifactory configuration') {
     	// Get Artifactory server instance, defined in the Artifactory Plugin administration page
     		server = Artifactory.server "artifactory"
