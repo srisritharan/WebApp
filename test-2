@@ -38,6 +38,7 @@ node {
         buildInfo = rtMaven.run pom: 'pom.xml', goals: 'clean install', buildInfo: buildInfo
 	slackSend channel: 'project-dcs', message: "started ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", tokenCredentialId: 'slack'
 	jiraComment body: 'Build sucess', issueKey: 'DCS-1'
+	jiraSendBuildInfo branch: 'master', site: 'devopsbc.atlassian.net'
     }
 //
 
