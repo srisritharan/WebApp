@@ -57,7 +57,8 @@ node {
     }
 //    
     stage('Performance Test') {
-	blazeMeterTest credentialsId: 'BlazeMeter', testId: '7851103.taurus', workspaceId: '463545'
+    	echo 'blazeMeterTest' Pref test
+//	blazeMeterTest credentialsId: 'BlazeMeter', testId: '7851103.taurus', workspaceId: '463545'
     }
 //
     stage('Deploy to Prod') {
