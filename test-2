@@ -56,9 +56,9 @@ node {
 	publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: '\\functionaltest\\target\\surefire-reports', reportFiles: 'index.html', reportName: 'UI Test Report', reportTitles: ''])
     }
 //    
-//    stage('Performance Test') {
-//	blazeMeterTest credentialsId: 'BlazeMeter', testId: '7851103.taurus', workspaceId: '463545'
-//    }
+    stage('Performance Test') {
+	blazeMeterTest credentialsId: 'BlazeMeter', testId: '7851103.taurus', workspaceId: '463545'
+    }
 //
     stage('Deploy to Prod') {
 	      deploy adapters: [tomcat7(credentialsId: 'AWStomcat', path: '', url: 'http://3.14.10.76:8080/')], contextPath: '/ProdWebapp', war: '**/*.war'
