@@ -75,7 +75,7 @@ node {
  	echo 'I failed'
  }
  finally {
-	if (currentBuild.result == 'UNSTABLE' or 'failure') {
+	if (currentBuild.result == 'failure') {
             echo 'I am unstable :/'
 	     error " failed"
         } else {
