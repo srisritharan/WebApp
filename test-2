@@ -1,4 +1,5 @@
 node {
+    try{
     // Get Artifactory server instance, defined in the Artifactory Plugin administration page
     
     	def server = Artifactory.server "artifactory"
@@ -70,3 +71,14 @@ node {
 	publishHTML([allowMissing: false, alwaysLinkToLastBuild: false, keepAll: false, reportDir: '\\Acceptancetest\\target\\surefire-reports', reportFiles: 'index.html', reportName: 'Sanity Test Report', reportTitles: ''])
     }
  }
+ catch (exc) {
+ 	echo 'I failed'
+ }
+ finally {
+	if (currentBuild.result == 'UNSTABLE') {
+            echo 'I am unstable :/'
+        } else {
+            echo 'One way or another, I have finished'
+        }
+ }
+}
