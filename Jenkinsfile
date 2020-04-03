@@ -17,7 +17,6 @@ node {
     
         rtMaven.deployer releaseRepo:'libs-release-local', snapshotRepo:'libs-snapshot-local', server: server
         rtMaven.resolver releaseRepo:'libs-release', snapshotRepo:'libs-snapshot', server: server
-//	rtMaven.deployer.deployArtifacts = false // Disable artifacts deployment during Maven run
 //  
 	slackSend channel: 'project-dcs', message: "started ${env.JOB_NAME} ${env.BUILD_NUMBER} (<${env.BUILD_URL}|Open>)", tokenCredentialId: 'slack'
 //	    
@@ -59,7 +58,7 @@ node {
 //    
     stage('Performance Test') {
     	echo 'Running BlazeMeterTest' 
-//	blazeMeterTest credentialsId: 'BlazeMeter', testId: '7883189.taurus', workspaceId: '470553'
+	blazeMeterTest credentialsId: 'BlazeMeter', testId: '7883189.taurus', workspaceId: '470553'
     }
 //
     stage('Deploy to Prod') {
